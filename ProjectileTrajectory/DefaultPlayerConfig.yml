@@ -1,0 +1,28 @@
+#This file contains the default settings every player will get, when he uses the plugin for the first time.
+enabled: true
+
+Arrow:
+    particle: reddust
+    color: red
+    enabled: true
+    distance-level: 1
+Snowball:
+    particle: reddust
+    color: blue
+    enabled: true
+    distance-level: 1
+Enderpearl:
+    particle: reddust
+    color: purple
+    enabled: true
+    distance-level: 1
+Egg:
+    particle: reddust
+    color: white
+    enabled: true
+    distance-level: 1
+Potion:
+    particle: reddust
+    color: green
+    enabled: true
+    distance-level: 0

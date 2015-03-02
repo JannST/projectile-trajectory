@@ -1,0 +1,14 @@
+#This is the main config file of the TrajectorySimulator Plugin
+
+#ticks between the particle sendings (the lower this number is, the more performance the plugin will need)
+ticks-between-particles: 3
+
+#toggles if changes in the trajectory settings will be saved to file instantly
+save-instant: false
+
+#When instant saving is disabled a scheduler is used to save the data in certain intervals
+#With this option you can set the interval time in minutes
+save-interval: 1
+
+#set the maximal length a trajectory can have
+maximal-length: 400

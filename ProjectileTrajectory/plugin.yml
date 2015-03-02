@@ -1,0 +1,7 @@
+name: ProjectileTrajectory
+version: 0.0.1
+author: JanST
+main: de.janst.trajectory.TrajectorySimulator
+commands:
+    trajectory:
+    tra:
