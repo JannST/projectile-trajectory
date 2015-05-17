@@ -41,11 +41,12 @@ public class PlayerObject {
 	public void sendParticle(Player player, Location location, CalculatorType type) {
 		ParticleEffect particleEffect = config.getTrajectoryParticle(type);
 		if(particleEffect.hasProperty(ParticleProperty.COLORABLE)) {
-			//particleEffect.display(config.getOrdinaryParticleColor(type), location, player);
-			particleEffect.display(config.getOrdinaryParticleColor(type), location, 100);
+			particleEffect.display(config.getOrdinaryParticleColor(type), location, player);
+			//particleEffect.display(config.getOrdinaryParticleColor(type), location, 50); //show to all
 		}
 		else {
 			particleEffect.display(0, 0, 0, 0, 1, location, player);
+			//particleEffect.display(0, 0, 0, 0, 1, location, 50);
 		}
 	}
 }

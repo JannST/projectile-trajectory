@@ -2,7 +2,6 @@ package de.janst.trajectory;
 
 import java.io.File;
 import java.io.IOException;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.janst.trajectory.calculator.TrajectoryCalculator;
@@ -17,7 +16,7 @@ import de.janst.trajectory.menu.api.listener.InventoryListener;
 import de.janst.trajectory.metrics.Metrics;
 import de.janst.trajectory.playerhandling.PlayerHandler;
 
-public class TrajectorySimulator extends JavaPlugin implements Listener {
+public class TrajectorySimulator extends JavaPlugin {
 
 	private static TrajectorySimulator plugin;
 	private TrajectoryScheduler trajectoryScheduler;

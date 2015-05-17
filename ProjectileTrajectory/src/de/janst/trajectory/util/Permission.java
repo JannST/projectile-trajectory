@@ -5,7 +5,7 @@ public enum Permission {
 	USE("use");
 	
 	private String permission;
-	private final String base = "trajectorysimulator.";
+	private final String base = "projectiletrajectory.";
 
 	Permission(String permission) {
 		this.permission = base + permission;

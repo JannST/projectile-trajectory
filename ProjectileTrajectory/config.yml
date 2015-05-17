@@ -1,7 +1,7 @@
-#This is the main config file of the TrajectorySimulator Plugin
+#This is the main config file of the ProjectileTrajectory Plugin
 
-#ticks between the particle sendings (the lower this number is, the more performance the plugin will need)
-ticks-between-particles: 3
+#ticks between particle sending (the lower this number is, the more performance the plugin will need)
+ticks-between-particles: 2
 
 #toggles if changes in the trajectory settings will be saved to file instantly
 save-instant: false
