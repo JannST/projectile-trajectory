@@ -2,7 +2,8 @@ package de.janst.trajectory.util;
 
 public enum Permission {
 
-	USE("use");
+	USE("use"),
+	CHANGE("change");
 	
 	private String permission;
 	private final String base = "projectiletrajectory.";

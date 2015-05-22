@@ -1,4 +1,5 @@
 #This is the main config file of the ProjectileTrajectory Plugin
+config-version: 0.0.2
 
 #ticks between particle sending (the lower this number is, the more performance the plugin will need)
 ticks-between-particles: 2
@@ -12,3 +13,7 @@ save-interval: 1
 
 #set the maximal length a trajectory can have
 maximal-length: 400
+
+#allow or disallow player to change particles. 
+#if particle change is disabled and you want to allow it to certain persons nevertheless you have to give the permission projectiletrajectory.change
+allow-particle-change: true

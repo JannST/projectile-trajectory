@@ -16,6 +16,7 @@ public class Configuration {
 	protected final String fileName;
 	protected YamlConfiguration config;
 	protected boolean changes = false;
+	protected final boolean NEWFILE;
 	
 	public Configuration(String file, boolean hasResource) {
 		this.trajectorySimulator = TrajectorySimulator.getPlugin();
@@ -23,6 +24,7 @@ public class Configuration {
 		configFile = new File(trajectorySimulator.getDataFolder(), file);
 		
 		if(!configFile.exists()) {
+			NEWFILE = true;
 			if(hasResource) {
 				trajectorySimulator.saveResource(file, true);
 			}
@@ -34,6 +36,9 @@ public class Configuration {
 				}
 			}
 			changes = true;
+		}
+		else {
+			NEWFILE = false;
 		}
 		
 		loadConfig();
@@ -60,4 +65,11 @@ public class Configuration {
 		return this.changes;
 	}
 
+	public File getFile() {
+		return this.configFile;
+	}
+	
+	public YamlConfiguration getYamlConfiguration() {
+		return this.config;
+	}
 }
