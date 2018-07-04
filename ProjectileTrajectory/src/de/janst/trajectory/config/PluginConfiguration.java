@@ -1,8 +1,10 @@
 package de.janst.trajectory.config;
 
+import java.io.IOException;
+
 public class PluginConfiguration extends Configuration {
 
-	public PluginConfiguration() {
+	public PluginConfiguration() throws IOException {
 		super("config.yml", true);
 	}
 	

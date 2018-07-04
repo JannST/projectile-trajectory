@@ -16,7 +16,7 @@ public class ColorSelectMenu extends MenuSheet {
 	private final CalculatorType type;
 
 	public ColorSelectMenu(MenuSheet parent, PlayerObject playerObject, CalculatorType type) {
-		super(parent.getPlugin(), "§6§lChoose color", 18, parent);
+		super(parent.getPlugin(), "ï¿½6ï¿½lChoose color", 18, parent);
 		registerListener("base", new MainListener());
 		this.playerObject = playerObject;
 		this.type = type;
@@ -26,10 +26,10 @@ public class ColorSelectMenu extends MenuSheet {
 
 	@Override
 	public void initContents() {
-		setContent(0, new ItemCreator("§c§lback", Material.BUCKET, 1).toItem());
+		setContent(0, new ItemCreator("ï¿½cï¿½lback", Material.BUCKET, 1).toItem());
 		int insertion = 1;
 		for(RGBColor color : RGBColor.values()) {
-			setContent(insertion++, new ItemCreator("§a§lChoose: "+color.getDisplayName(), Material.WOOL, 1, color.getData(), (short)0).toItem());
+			setContent(insertion++, new ItemCreator("ï¿½aï¿½lChoose: "+color.getDisplayName(), Material.WOOL, 1, color.getData(), (short)0).toItem());
 		}
 	}
 

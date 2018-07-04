@@ -1,17 +1,17 @@
 package de.janst.trajectory;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Set;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.logging.Level;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.janst.trajectory.calculator.TrajectoryCalculator;
 import de.janst.trajectory.command.MenuCommand;
-import de.janst.trajectory.config.FileHandler;
-import de.janst.trajectory.config.PlayerConfiguration;
 import de.janst.trajectory.config.PlayerConfigurationDefaults;
 import de.janst.trajectory.config.PluginConfiguration;
 import de.janst.trajectory.listener.BowListener;
@@ -19,7 +19,6 @@ import de.janst.trajectory.listener.PlayerListener;
 import de.janst.trajectory.menu.TrajectoryCustomizeMenu;
 import de.janst.trajectory.menu.api.MenuSheet;
 import de.janst.trajectory.menu.api.listener.InventoryListener;
-import de.janst.trajectory.metrics.Metrics;
 import de.janst.trajectory.playerhandling.PlayerHandler;
 
 public class TrajectorySimulator extends JavaPlugin {
@@ -32,24 +31,30 @@ public class TrajectorySimulator extends JavaPlugin {
 	private InventoryScheduler inventoryScheduler;
 	
 	public void onEnable() {
-		try {
-			Metrics metrics = new Metrics(this);
-			metrics.start();
-			getLogger().info("Metrics enabled");
-		} catch (IOException e) {}
 		TrajectorySimulator.plugin = this;
 		setUpFiles();
-		config = new PluginConfiguration();
-		if(!config.isUpToDate(getInternalConfigVersion())) {
-			mergeConfig();
-		}
+		try {
+			config = new PluginConfiguration();
+
 		TrajectoryCustomizeMenu.ALLOWPARTICLECHANGE = config.allowParticleChange();
 		TrajectoryCalculator.MAXIMAL_LENGTH = config.getMaximalLength();
 		new PlayerConfigurationDefaults();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		trajectoryScheduler = new TrajectoryScheduler(this, config.getTickSpeed());
 		inventoryScheduler = new InventoryScheduler(this);
 		this.playerHandler = new PlayerHandler(this);
+		
+		try {
+			this.playerHandler.loadOnlinePlayers();
+		} catch (IOException e) {
+			getLogger().log(Level.SEVERE, "Could not load online players");
+			e.printStackTrace();
+		}
+		
 		getServer().getPluginManager().registerEvents(new InventoryListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
 		this.bowListener = new BowListener();
@@ -59,12 +64,7 @@ public class TrajectorySimulator extends JavaPlugin {
 		getCommand("trajectory").setExecutor(menuCommand);
 		getCommand("tra").setExecutor(menuCommand);
 		
-		if(config.saveInstant()) {
-			PlayerConfiguration.SAVE_INSTANT = true;
-		}
-		else {
-			new FileSaveScheduler(this, config.getSaveInterval());
-		}
+		new FileSaveScheduler(this, config.getSaveInterval());
 		getLogger().info("Plugin enabled");
 	}
 
@@ -72,7 +72,12 @@ public class TrajectorySimulator extends JavaPlugin {
 		MenuSheet.closeAllMenuSheets();
 		getServer().getScheduler().cancelTasks(this);
 		if(!config.saveInstant())
-			getPlayerHandler().saveAll();
+			try {
+				getPlayerHandler().saveAll();
+			} catch (IOException e) {
+				getLogger().log(Level.SEVERE, "Could not save player data");
+				e.printStackTrace();
+			}
 	}
 	
 	public InventoryScheduler getInventoryScheduler() {
@@ -111,8 +116,9 @@ public class TrajectorySimulator extends JavaPlugin {
 	}
 	
 	private String getInternalConfigVersion() {
-		@SuppressWarnings("deprecation")
-		YamlConfiguration config = YamlConfiguration.loadConfiguration(getResource("config.yml"));
+		InputStream in = getClass().getResourceAsStream("config.yml"); 
+		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(reader);
 		return config.getString("config-version");
 	}
 }

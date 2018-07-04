@@ -1,5 +1,6 @@
 package de.janst.trajectory.playerhandling;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -18,7 +19,6 @@ public class PlayerHandler {
 
 	public PlayerHandler(TrajectorySimulator trajectorySimulator) {
 		this.trajectorySimulator = trajectorySimulator;
-		loadOnlinePlayers();
 	}
 	
 	private void addPlayerObject(PlayerObject playerObject) {
@@ -27,11 +27,11 @@ public class PlayerHandler {
 		}
 	}
 	
-	public void addPlayer(Player player) {
+	public void addPlayer(Player player) throws IOException {
 		if(player != null) {
 			if(player.hasPermission(Permission.USE.getString())) {
 				addPlayerObject(new PlayerObject(player.getUniqueId()));
-				TrajectoryCalculator calculator = ItemChecker.ITEM_CHECKER.checkItem(player.getItemInHand(), player.getUniqueId());
+				TrajectoryCalculator calculator = ItemChecker.ITEM_CHECKER.checkItem(player.getInventory().getItemInMainHand(), player.getUniqueId());
 				
 				if(calculator != null) {
 					trajectorySimulator.getTrajectoryScheduler().addCalculator(player.getUniqueId(), calculator);
@@ -58,13 +58,13 @@ public class PlayerHandler {
 		return trajectorySimulator;
 	}
 	
-	private void loadOnlinePlayers() {
+	public void loadOnlinePlayers() throws IOException {
 		for(Player player : trajectorySimulator.getServer().getOnlinePlayers()) {
 			addPlayer(player);
 		}
 	}
 	
-	public void saveAll() {
+	public void saveAll() throws IOException {
 		for(PlayerObject playerObject : playerObjects.values()) {
 			if(playerObject.getConfig().hasChanges()) {
 				playerObject.getConfig().save();

@@ -1,5 +1,8 @@
 package de.janst.trajectory.listener;
 
+import java.io.IOException;
+import java.util.logging.Level;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -57,7 +60,12 @@ public class PlayerListener implements Listener {
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
-		trajectorySimulator.getPlayerHandler().addPlayer(event.getPlayer());
+		try {
+			trajectorySimulator.getPlayerHandler().addPlayer(event.getPlayer());
+		} catch (IOException e) {
+			trajectorySimulator.getLogger().log(Level.SEVERE, "Could not add player " + event.getPlayer().getName());
+			e.printStackTrace();
+		}
 	}
 	
 	@EventHandler

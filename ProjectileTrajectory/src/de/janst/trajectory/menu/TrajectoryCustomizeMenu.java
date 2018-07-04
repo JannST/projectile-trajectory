@@ -4,8 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import com.darkblade12.particleeffect.ParticleEffect.ParticleProperty;
+import org.inventivetalent.particle.ParticleEffect;
 
 import de.janst.trajectory.calculator.CalculatorType;
 import de.janst.trajectory.menu.api.ItemCreator;
@@ -25,7 +24,7 @@ public class TrajectoryCustomizeMenu extends MenuSheet {
 	private boolean colorable = false;
 
 	public TrajectoryCustomizeMenu(MenuSheet parent, PlayerObject playerObject, CalculatorType type) {
-		super(parent.getPlugin(), "§6§l"+type.getName()+" trajectory", 9, parent);
+		super(parent.getPlugin(), "ï¿½6ï¿½l"+type.getName()+" trajectory", 9, parent);
 		registerListener("base", new MainListener());
 		allowChange = ALLOWPARTICLECHANGE ? true : playerObject.getPlayer().hasPermission(Permission.CHANGE.getString());
 		this.playerObject = playerObject;
@@ -36,9 +35,9 @@ public class TrajectoryCustomizeMenu extends MenuSheet {
 
 	@Override
 	public void initContents() {
-		setContent(0, new ItemCreator("§c§lback", Material.BUCKET, 1).toItem());
+		setContent(0, new ItemCreator("ï¿½cï¿½lback", Material.BUCKET, 1).toItem());
 		if(allowChange)
-			setContent(5, new ItemCreator("§6§lChoose particle", Material.REDSTONE, 1).toItem());
+			setContent(5, new ItemCreator("ï¿½6ï¿½lChoose particle", Material.REDSTONE, 1).toItem());
 		setParticleItem();
 		setEnabledItem();
 		setColorItems();
@@ -46,7 +45,7 @@ public class TrajectoryCustomizeMenu extends MenuSheet {
 	}
 
 	private void setEnabledItem() {
-		String title = playerObject.getConfig().isTrajectoryEnabled(type) ? "§4§lDisable "+type.getName().toLowerCase()+" trajectory" : "§2§lEnable "+type.getName().toLowerCase()+" trajectory";
+		String title = playerObject.getConfig().isTrajectoryEnabled(type) ? "ï¿½4ï¿½lDisable "+type.getName().toLowerCase()+" trajectory" : "ï¿½2ï¿½lEnable "+type.getName().toLowerCase()+" trajectory";
 		byte data = playerObject.getConfig().isTrajectoryEnabled(type) ? (byte)14 : (byte)13;
 		setContent(1, new ItemCreator(title, Material.WOOL, 1, data, (short) 0).toItem());
 	}
@@ -55,26 +54,26 @@ public class TrajectoryCustomizeMenu extends MenuSheet {
 		ItemStack item = new ItemStack(ParticleItems.fromEffect(playerObject.getConfig().getTrajectoryParticle(type)).getItem());
 		ItemMeta meta = item.getItemMeta();
 		String name = meta.getDisplayName();
-		meta.setDisplayName("§6§lSelected: " + name);
+		meta.setDisplayName("ï¿½6ï¿½lSelected: " + name);
 		item.setItemMeta(meta);
 		setContent(4, item);
 	}
 	
 	private void setDistanceItem() {
-		ItemCreator creator = new ItemCreator("§6§lUpdate distance", Material.COMPASS, playerObject.getConfig().getDistanceLevel(type));
-		creator.addLore("§aActual distance: §e" + playerObject.getConfig().getDistanceLevel(type)*2 + " Blocks");
-		creator.addLore("§eInfo: with this option you can set the minimal distance");
-		creator.addLore("§ebetween you and the displayed particles");
+		ItemCreator creator = new ItemCreator("ï¿½6ï¿½lUpdate distance", Material.COMPASS, playerObject.getConfig().getDistanceLevel(type));
+		creator.addLore("ï¿½aActual distance: ï¿½e" + playerObject.getConfig().getDistanceLevel(type)*2 + " Blocks");
+		creator.addLore("ï¿½eInfo: with this option you can set the minimal distance");
+		creator.addLore("ï¿½ebetween you and the displayed particles");
 		setContent(2, creator.toItem());
 	}
 	
 	public void setColorItems() {
-		if(playerObject.getConfig().getTrajectoryParticle(type).hasProperty(ParticleProperty.COLORABLE)) {
+		if(playerObject.getConfig().getTrajectoryParticle(type).hasFeature(ParticleEffect.Feature.COLOR)) {
 			colorable = true;
 			RGBColor color = playerObject.getConfig().getParticleColor(type);
-			setContent(7, new ItemCreator("§6§lSelected: §a§l" + color.getDisplayName(), Material.WOOL, 1, color.getData(), (short)0).toItem());
+			setContent(7, new ItemCreator("ï¿½6ï¿½lSelected: ï¿½aï¿½l" + color.getDisplayName(), Material.WOOL, 1, color.getData(), (short)0).toItem());
 			if(allowChange)
-			setContent(8, new ItemCreator("§a§lChoose particle color", Material.REDSTONE, 1).toItem());
+			setContent(8, new ItemCreator("ï¿½aï¿½lChoose particle color", Material.REDSTONE, 1).toItem());
 		}
 		else {
 			colorable = false;

@@ -15,32 +15,24 @@ public class Configuration {
 	protected File configFile = null;
 	protected final String fileName;
 	protected YamlConfiguration config;
-	protected boolean changes = false;
-	protected final boolean NEWFILE;
+	protected boolean hasChanges = false;
+	protected boolean NEWFILE = false;
 	
-	public Configuration(String file, boolean hasResource) {
+	public Configuration(String file, boolean hasResource) throws IOException {
 		this.trajectorySimulator = TrajectorySimulator.getPlugin();
 		this.fileName = file;
 		configFile = new File(trajectorySimulator.getDataFolder(), file);
 		
 		if(!configFile.exists()) {
+			hasChanges = true;
 			NEWFILE = true;
 			if(hasResource) {
 				trajectorySimulator.saveResource(file, true);
 			}
 			else {
-				try {
-					configFile.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				configFile.createNewFile();
 			}
-			changes = true;
 		}
-		else {
-			NEWFILE = false;
-		}
-		
 		loadConfig();
 	}
 	
@@ -48,21 +40,19 @@ public class Configuration {
 		config = YamlConfiguration.loadConfiguration(configFile);
 	}
 	
-	public void save() {
+	public void save() throws IOException {
 	    if (config == null || configFile == null) {
 	    	return;
 	    }
-	    
-	    try {
-	        config.save(configFile);
-	        changes = false;
-	    } catch (IOException ex) {
-	    	trajectorySimulator.getLogger().log(Level.WARNING, "Could not save config " + fileName + " to " + configFile.getAbsolutePath());
-	    }
+        config.save(configFile);
+        hasChanges = false;
+//	    } catch (IOException ex) {
+//	    	trajectorySimulator.getLogger().log(Level.WARNING, "Could not save config " + fileName + " to " + configFile.getAbsolutePath());
+//	    }
 	}
 	
 	public boolean hasChanges() {
-		return this.changes;
+		return this.hasChanges;
 	}
 
 	public File getFile() {
