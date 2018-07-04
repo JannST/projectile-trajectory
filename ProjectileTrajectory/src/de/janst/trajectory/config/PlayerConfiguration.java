@@ -6,14 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.inventivetalent.particle.ParticleEffect;
+import org.bukkit.Particle;
 
 import de.janst.trajectory.calculator.CalculatorType;
 import de.janst.trajectory.util.RGBColor;
 
 public class PlayerConfiguration extends Configuration {
 
-	private final Map<CalculatorType, ParticleEffect> particles = new HashMap<CalculatorType, ParticleEffect>();
+	private final Map<CalculatorType, Particle> particles = new HashMap<CalculatorType, Particle>();
 	private final Map<CalculatorType, Color> particleColors = new HashMap<CalculatorType, Color>();
 	
 	public PlayerConfiguration(UUID uuid) throws IOException {
@@ -41,17 +41,18 @@ public class PlayerConfiguration extends Configuration {
 		config.set(type.getName()+".enabled", enabled);
 	}
 	
-	public void setTrajectoryParticle(ParticleEffect particle, CalculatorType type) {
+	public void setTrajectoryParticle(Particle particle, CalculatorType type) {
 		particles.put(type, particle);
-		config.set(type.getName()+".particle", particle.getName());
+		config.set(type.getName()+".particle", particle.toString());
 	}
 	
-	public ParticleEffect getTrajectoryParticle(CalculatorType type) {
+	public Particle getTrajectoryParticle(CalculatorType type) {
 		if(particles.containsKey(type)) {
 			return particles.get(type);
 		}
 		else {
-			ParticleEffect effect = ParticleEffect.valueOf(config.getString(type.getName()+".particle"));
+			System.out.println(config.getString(type.getName()+".particle"));
+			Particle effect = Particle.valueOf(config.getString(type.getName()+".particle"));
 			particles.put(type, effect);
 			return effect;
 		}

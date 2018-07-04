@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
-import org.inventivetalent.particle.ParticleEffect;
 
 import de.janst.trajectory.calculator.CalculatorType;
 import de.janst.trajectory.config.PlayerConfiguration;
@@ -38,12 +38,7 @@ public class PlayerObject {
 	}
 	
 	public void sendParticle(Player player, Location location, CalculatorType type) {
-		ParticleEffect particleEffect = config.getTrajectoryParticle(type);
-		if(particleEffect.hasFeature(ParticleEffect.Feature.COLOR)) {
-			particleEffect.sendColor(Bukkit.getOnlinePlayers(), location, config.getOrdinaryParticleColor(type));
-		}
-		else {
-			ParticleEffect.FLAME.send(Bukkit.getOnlinePlayers(), location, 0, 0, 0, 0, 1);
-		}
+		Particle particleEffect = config.getTrajectoryParticle(type);
+		player.spawnParticle(particleEffect, location, 3,0,0,0,0);
 	}
 }

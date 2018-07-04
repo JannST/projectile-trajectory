@@ -32,7 +32,7 @@ public class MenuCommand implements CommandExecutor {
 				}
 			}
 			else {
-				player.sendMessage("§cSorry pal, you are not allowed to use this command");
+				player.sendMessage("ï¿½cSorry pal, you are not allowed to use this command");
 				return true;
 			}
 		}

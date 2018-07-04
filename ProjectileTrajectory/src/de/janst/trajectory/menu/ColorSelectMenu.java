@@ -44,7 +44,7 @@ public class ColorSelectMenu extends MenuSheet {
 			else if(event.getSlot() <= RGBColor.values().length && event.getSlot() > 0) {
 				playerObject.getConfig().setParticleColor(RGBColor.values()[event.getSlot()-1], type);
 				TrajectoryCustomizeMenu menu = (TrajectoryCustomizeMenu) getParent();
-				menu.setColorItems();
+				//menu.setColorItems();
 				menu.updateInventory();				
 			}
 		}

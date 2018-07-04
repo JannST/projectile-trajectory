@@ -4,7 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.inventivetalent.particle.ParticleEffect;
 
 import de.janst.trajectory.calculator.CalculatorType;
 import de.janst.trajectory.menu.api.ItemCreator;
@@ -40,7 +39,7 @@ public class TrajectoryCustomizeMenu extends MenuSheet {
 			setContent(5, new ItemCreator("�6�lChoose particle", Material.REDSTONE, 1).toItem());
 		setParticleItem();
 		setEnabledItem();
-		setColorItems();
+		//setColorItems();
 		setDistanceItem();
 	}
 
@@ -67,21 +66,21 @@ public class TrajectoryCustomizeMenu extends MenuSheet {
 		setContent(2, creator.toItem());
 	}
 	
-	public void setColorItems() {
-		if(playerObject.getConfig().getTrajectoryParticle(type).hasFeature(ParticleEffect.Feature.COLOR)) {
-			colorable = true;
-			RGBColor color = playerObject.getConfig().getParticleColor(type);
-			setContent(7, new ItemCreator("�6�lSelected: �a�l" + color.getDisplayName(), Material.WOOL, 1, color.getData(), (short)0).toItem());
-			if(allowChange)
-			setContent(8, new ItemCreator("�a�lChoose particle color", Material.REDSTONE, 1).toItem());
-		}
-		else {
-			colorable = false;
-			setContent(7, null);
-			setContent(8, null);
-		}
-			
-	}
+//	public void setColorItems() {
+//		if(playerObject.getConfig().getTrajectoryParticle(type).hasFeature(ParticleEffect.Feature.COLOR)) {
+//			colorable = true;
+//			RGBColor color = playerObject.getConfig().getParticleColor(type);
+//			setContent(7, new ItemCreator("�6�lSelected: �a�l" + color.getDisplayName(), Material.WOOL, 1, color.getData(), (short)0).toItem());
+//			if(allowChange)
+//			setContent(8, new ItemCreator("�a�lChoose particle color", Material.REDSTONE, 1).toItem());
+//		}
+//		else {
+//			colorable = false;
+//			setContent(7, null);
+//			setContent(8, null);
+//		}
+//			
+//	}
 	
 	
 	

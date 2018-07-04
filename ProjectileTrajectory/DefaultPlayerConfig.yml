@@ -2,27 +2,27 @@
 enabled: true
 
 Arrow:
-    particle: reddust
+    particle: CRIT
     color: red
     enabled: true
     distance-level: 1
 Snowball:
-    particle: reddust
+    particle: CRIT
     color: blue
     enabled: true
     distance-level: 1
 Enderpearl:
-    particle: reddust
+    particle: CRIT
     color: purple
     enabled: true
     distance-level: 1
 Egg:
-    particle: reddust
+    particle: CRIT
     color: white
     enabled: true
     distance-level: 1
 Potion:
-    particle: reddust
+    particle: CRIT
     color: green
     enabled: true
     distance-level: 0

@@ -15,7 +15,7 @@ public class ParticleSelectMenu extends MenuSheet {
 	private final CalculatorType type;
 
 	public ParticleSelectMenu(MenuSheet parent, PlayerObject playerObject, CalculatorType type) {
-		super(parent.getPlugin(), "§6§lChoose particle", 18, parent);
+		super(parent.getPlugin(), "ï¿½6ï¿½lChoose particle", 18, parent);
 		registerListener("base", new MainListener());
 		this.playerObject = playerObject;
 		this.type = type;
@@ -25,7 +25,7 @@ public class ParticleSelectMenu extends MenuSheet {
 
 	@Override
 	public void initContents() {
-		setContent(0, new ItemCreator("§c§lback", Material.BUCKET, 1).toItem());
+		setContent(0, new ItemCreator("ï¿½cï¿½lback", Material.BUCKET, 1).toItem());
 		int insertion = 1;
 		for(ParticleItems item : ParticleItems.values()) {
 			setContent(insertion++, item.getItem());
@@ -41,10 +41,10 @@ public class ParticleSelectMenu extends MenuSheet {
 				getParent().show();
 			}
 			else if(event.getSlot() <= ParticleItems.values().length) {
-				playerObject.getConfig().setTrajectoryParticle(ParticleItems.values()[event.getSlot()-1].getParticleEffect(), type);
+				playerObject.getConfig().setTrajectoryParticle(ParticleItems.values()[event.getSlot()-1].getParticle(), type);
 				TrajectoryCustomizeMenu menu = (TrajectoryCustomizeMenu) getParent();
 				menu.setParticleItem();
-				menu.setColorItems();
+				//menu.setColorItems();
 				menu.updateInventory();				
 			}
 		}
