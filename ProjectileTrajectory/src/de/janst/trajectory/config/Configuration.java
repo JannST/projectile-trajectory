@@ -2,8 +2,6 @@ package de.janst.trajectory.config;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import de.janst.trajectory.TrajectorySimulator;
@@ -41,14 +39,8 @@ public class Configuration {
 	}
 	
 	public void save() throws IOException {
-	    if (config == null || configFile == null) {
-	    	return;
-	    }
         config.save(configFile);
         hasChanges = false;
-//	    } catch (IOException ex) {
-//	    	trajectorySimulator.getLogger().log(Level.WARNING, "Could not save config " + fileName + " to " + configFile.getAbsolutePath());
-//	    }
 	}
 	
 	public boolean hasChanges() {

@@ -18,9 +18,9 @@ public class MainMenu extends MenuSheet {
 
 	private final PlayerObject playerObject;
 
-	public MainMenu(TrajectorySimulator plugin, Player player) {
-		super(plugin, "§2§lTrajectory Menu", 9, player);
-		this.playerObject = plugin.getPlayerHandler().getPlayerObject(player.getUniqueId());
+	public MainMenu(PlayerObject playerObject) {
+		super(TrajectorySimulator.getInstance(), "§2§lTrajectory Menu", 9, playerObject.getPlayer());
+		this.playerObject = playerObject;
 		registerListener("base", new MainListener());
 		initContents();
 	}
@@ -60,25 +60,27 @@ public class MainMenu extends MenuSheet {
 				setEnabledItem();
 				updateInventory();
 			}
-			else if(slot == 4) {
+			else if(slot >= 4 && slot <= 8) {
+				CalculatorType type = null;
+				switch (slot) {
+				case 4:
+					type = CalculatorType.ARROW;
+					break;
+				case 5:
+					type = CalculatorType.POTION;
+					break;
+				case 6:
+					type = CalculatorType.SNOWBALL;
+					break;
+				case 7:
+					type = CalculatorType.EGG;
+					break;
+				case 8:
+					type = CalculatorType.ENDERPEARL;
+					break;
+				}
 				standby();
-				new TrajectoryCustomizeMenu(MainMenu.this, playerObject, CalculatorType.ARROW).show();
-			}
-			else if(slot == 5) {
-				standby();
-				new TrajectoryCustomizeMenu(MainMenu.this, playerObject, CalculatorType.POTION).show();
-			}
-			else if(slot == 6) {
-				standby();
-				new TrajectoryCustomizeMenu(MainMenu.this, playerObject, CalculatorType.SNOWBALL).show();
-			}
-			else if(slot == 7) {
-				standby();
-				new TrajectoryCustomizeMenu(MainMenu.this, playerObject, CalculatorType.EGG).show();
-			}
-			else if(slot == 8) {
-				standby();
-				new TrajectoryCustomizeMenu(MainMenu.this, playerObject, CalculatorType.ENDERPEARL).show();
+				new TrajectoryCustomizeMenu(MainMenu.this, playerObject, type).show();
 			}
 		}
 

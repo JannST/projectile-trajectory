@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import de.janst.trajectory.calculator.CalculatorType;
-import de.janst.trajectory.util.ItemChecker;
+import de.janst.trajectory.util.TrajectoryCalculatorHelper;
 
 public class InventoryScheduler implements Runnable {
 
@@ -48,8 +48,8 @@ public class InventoryScheduler implements Runnable {
 		for(UUID uuid : players) {
 			player = trajectorySimulator.getServer().getPlayer(uuid);
 			if(player != null) {
-				itemStack = player.getInventory().getItemInHand();
-				type = itemStack != null ? CalculatorType.getByMaterial(itemStack.getType()) : null;
+				itemStack = player.getInventory().getItemInMainHand();
+				type = itemStack != null ? CalculatorType.getByItemStack(itemStack) : null;
 				
 				if(type == null) {
 					trajectorySimulator.getTrajectoryScheduler().removeCalculator(uuid);
@@ -57,11 +57,11 @@ public class InventoryScheduler implements Runnable {
 				else {
 					if(trajectorySimulator.getTrajectoryScheduler().hasCalculator(uuid)) {
 						if(trajectorySimulator.getTrajectoryScheduler().getCalculator(uuid).getType() != type) {
-							trajectorySimulator.getTrajectoryScheduler().addCalculator(uuid, ItemChecker.ITEM_CHECKER.checkItem(itemStack, uuid));
+							trajectorySimulator.getTrajectoryScheduler().addCalculator(uuid, TrajectoryCalculatorHelper.getCalculator(itemStack, uuid));
 						}
 					}
 					else {
-						trajectorySimulator.getTrajectoryScheduler().addCalculator(uuid, ItemChecker.ITEM_CHECKER.checkItem(itemStack, uuid));
+						trajectorySimulator.getTrajectoryScheduler().addCalculator(uuid, TrajectoryCalculatorHelper.getCalculator(itemStack, uuid));
 					}
 				}
 			}

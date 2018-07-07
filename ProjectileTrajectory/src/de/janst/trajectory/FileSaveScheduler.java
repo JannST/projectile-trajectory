@@ -1,7 +1,5 @@
 package de.janst.trajectory;
 
-import java.io.IOException;
-
 import org.bukkit.Bukkit;
 
 public class FileSaveScheduler implements Runnable {
@@ -24,12 +22,7 @@ public class FileSaveScheduler implements Runnable {
 	
 	@Override
 	public void run() {
-		try {
-			trajectorySimulator.getPlayerHandler().saveAll();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		trajectorySimulator.getPlayerHandler().saveAll();
 	}
 
 }

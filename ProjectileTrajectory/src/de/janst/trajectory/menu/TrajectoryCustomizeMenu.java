@@ -5,6 +5,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import de.janst.trajectory.TrajectorySimulator;
 import de.janst.trajectory.calculator.CalculatorType;
 import de.janst.trajectory.menu.api.ItemCreator;
 import de.janst.trajectory.menu.api.MenuSheet;
@@ -25,9 +26,11 @@ public class TrajectoryCustomizeMenu extends MenuSheet {
 	public TrajectoryCustomizeMenu(MenuSheet parent, PlayerObject playerObject, CalculatorType type) {
 		super(parent.getPlugin(), "�6�l"+type.getName()+" trajectory", 9, parent);
 		registerListener("base", new MainListener());
-		allowChange = ALLOWPARTICLECHANGE ? true : playerObject.getPlayer().hasPermission(Permission.CHANGE.getString());
 		this.playerObject = playerObject;
 		this.type = type;
+		boolean pluginAllowParticleChange = TrajectorySimulator.getInstance().getPluginConfig().allowParticleChange();
+		this.allowChange = pluginAllowParticleChange ? true : playerObject.hasPermission(Permission.CHANGE);
+
 		initContents();
 		updateInventory();
 	}
@@ -66,23 +69,6 @@ public class TrajectoryCustomizeMenu extends MenuSheet {
 		setContent(2, creator.toItem());
 	}
 	
-//	public void setColorItems() {
-//		if(playerObject.getConfig().getTrajectoryParticle(type).hasFeature(ParticleEffect.Feature.COLOR)) {
-//			colorable = true;
-//			RGBColor color = playerObject.getConfig().getParticleColor(type);
-//			setContent(7, new ItemCreator("�6�lSelected: �a�l" + color.getDisplayName(), Material.WOOL, 1, color.getData(), (short)0).toItem());
-//			if(allowChange)
-//			setContent(8, new ItemCreator("�a�lChoose particle color", Material.REDSTONE, 1).toItem());
-//		}
-//		else {
-//			colorable = false;
-//			setContent(7, null);
-//			setContent(8, null);
-//		}
-//			
-//	}
-	
-	
 	
 	private class MainListener implements SlotListener {
 
@@ -94,7 +80,6 @@ public class TrajectoryCustomizeMenu extends MenuSheet {
 			}
 			else if(event.getSlot() == 1) {
 				playerObject.getConfig().setTrajectoryEnabled(type, !playerObject.getConfig().isTrajectoryEnabled(type));
-				System.out.println(playerObject.getConfig().isTrajectoryEnabled(type));
 				setEnabledItem();
 				updateInventory();
 			}

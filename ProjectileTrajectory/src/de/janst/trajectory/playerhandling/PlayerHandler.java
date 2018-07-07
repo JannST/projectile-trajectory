@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import org.bukkit.entity.Player;
 
 import de.janst.trajectory.TrajectorySimulator;
 import de.janst.trajectory.calculator.TrajectoryCalculator;
-import de.janst.trajectory.util.ItemChecker;
+import de.janst.trajectory.util.TrajectoryCalculatorHelper;
 import de.janst.trajectory.util.Permission;
 
 public class PlayerHandler {
@@ -28,15 +29,16 @@ public class PlayerHandler {
 	}
 	
 	public void addPlayer(Player player) throws IOException {
-		if(player != null) {
-			if(player.hasPermission(Permission.USE.getString())) {
-				addPlayerObject(new PlayerObject(player.getUniqueId()));
-				TrajectoryCalculator calculator = ItemChecker.ITEM_CHECKER.checkItem(player.getInventory().getItemInMainHand(), player.getUniqueId());
-				
+		if(player == null) {
+			return;
+		}
+		if(player.hasPermission(Permission.USE.getString())) {
+				PlayerObject playerObject = new PlayerObject(player.getUniqueId());
+				addPlayerObject(playerObject);
+				TrajectoryCalculator calculator = TrajectoryCalculatorHelper.getCalculator(player.getInventory().getItemInMainHand(), player.getUniqueId());
 				if(calculator != null) {
 					trajectorySimulator.getTrajectoryScheduler().addCalculator(player.getUniqueId(), calculator);
 				}
-			}
 		}
 	}
 	
@@ -54,21 +56,22 @@ public class PlayerHandler {
 		return playerObjects.containsKey(uuid);
 	}
 	
-	public TrajectorySimulator getTrajectorySimulator() {
-		return trajectorySimulator;
-	}
-	
 	public void loadOnlinePlayers() throws IOException {
 		for(Player player : trajectorySimulator.getServer().getOnlinePlayers()) {
 			addPlayer(player);
 		}
 	}
 	
-	public void saveAll() throws IOException {
+	public void saveAll() {
+		try {
 		for(PlayerObject playerObject : playerObjects.values()) {
 			if(playerObject.getConfig().hasChanges()) {
 				playerObject.getConfig().save();
 			}
+		}
+		} catch (Exception e) {
+			trajectorySimulator.getLogger().log(Level.WARNING, "Could not save player settings");
+			e.printStackTrace();
 		}
 	}
 

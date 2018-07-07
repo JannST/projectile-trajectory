@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.janst.trajectory.TrajectorySimulator;
-import de.janst.trajectory.menu.MainMenu;
 import de.janst.trajectory.util.Permission;
 
 public class MenuCommand implements CommandExecutor {
@@ -27,8 +26,7 @@ public class MenuCommand implements CommandExecutor {
 			Player player = (Player)sender;
 			if(player.hasPermission(Permission.USE.getString())) {
 				if(trajectorySimulator.getPlayerHandler().containsPlayerObject(player.getUniqueId())) {
-					MainMenu menu = new MainMenu(trajectorySimulator, player);
-					menu.show();
+
 				}
 			}
 			else {

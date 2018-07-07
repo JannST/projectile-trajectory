@@ -19,7 +19,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.janst.trajectory.TrajectorySimulator;
 import de.janst.trajectory.calculator.TrajectoryCalculator;
-import de.janst.trajectory.util.ItemChecker;
+import de.janst.trajectory.util.TrajectoryCalculatorHelper;
 import de.janst.trajectory.util.Permission;
 
 public class PlayerListener implements Listener {
@@ -33,7 +33,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onItemChange(PlayerItemHeldEvent event) {
 		if(!event.isCancelled() && event.getPlayer().hasPermission(Permission.USE.getString())) {
-			TrajectoryCalculator calculator = ItemChecker.ITEM_CHECKER.checkItem(event.getNewSlot(), event.getPlayer().getInventory());
+			TrajectoryCalculator calculator = TrajectoryCalculatorHelper.getFromItem(event.getNewSlot(), event.getPlayer().getInventory());
 			
 			if(calculator != null) {
 				trajectorySimulator.getTrajectoryScheduler().addCalculator(event.getPlayer().getUniqueId(), calculator);

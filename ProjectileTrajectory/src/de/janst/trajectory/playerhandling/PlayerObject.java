@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 
 import de.janst.trajectory.calculator.CalculatorType;
 import de.janst.trajectory.config.PlayerConfiguration;
+import de.janst.trajectory.menu.MainMenu;
+import de.janst.trajectory.util.Permission;
 
 public class PlayerObject {
 
@@ -31,6 +33,15 @@ public class PlayerObject {
 	
 	public Player getPlayer() {
 		return Bukkit.getServer().getPlayer(uuid);
+	}
+	
+	public boolean hasPermission(Permission permission) {
+		return getPlayer().hasPermission(permission.getString());
+	}
+	
+	public void showMenu() {
+		MainMenu menu = new MainMenu(this);
+		menu.show();
 	}
 	
 	public PlayerConfiguration getConfig() {

@@ -50,7 +50,7 @@ public class PluginConfiguration extends Configuration {
 	 * @param str2 a string of ordinal numbers separated by decimal points.
 	 * @return The result is a negative integer if str1 is _numerically_ less than str2. 
 	 *         The result is a positive integer if str1 is _numerically_ greater than str2. 
-	 *         The result is zero if the strings are _numerically_ equal.
+	 * http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=1789445        The result is zero if the strings are _numerically_ equal.
 	 */
 	public Integer versionCompare(String str1, String str2) {
 	    String[] vals1 = str1.split("\\.");
