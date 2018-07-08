@@ -1,55 +1,94 @@
 package de.janst.trajectory.playerhandling;
 
 import java.io.IOException;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import de.janst.trajectory.calculator.CalculatorType;
+import de.janst.trajectory.calculator.TrajectoryCalculator;
 import de.janst.trajectory.config.PlayerConfiguration;
 import de.janst.trajectory.menu.MainMenu;
 import de.janst.trajectory.util.Permission;
+import de.janst.trajectory.util.TrajectoryCalculatorHelper;
 
 public class PlayerObject {
 
-	private final UUID uuid;
 	private final PlayerConfiguration config;
-	
-	public PlayerObject(UUID uuid) throws IOException {
-		this.uuid = uuid;
-		this.config = new PlayerConfiguration(uuid);
+	private Player player;
+	private TrajectoryCalculator currentCalculator;
+	private long playerHoldingBowTime;
+
+	public PlayerObject(Player player) throws IOException {
+		this.player = player;
+		this.config = new PlayerConfiguration(player.getUniqueId());
+
+		TrajectoryCalculator calculator = TrajectoryCalculatorHelper.getCalculator(player.getInventory().getItemInMainHand(), this);
+		if (calculator != null)
+			this.currentCalculator = calculator;
 	}
-	
-	public UUID getUUID() {
-		return this.uuid;
-	}
-	
-	public boolean isOnline() {
-		return Bukkit.getServer().getPlayer(uuid) != null;
-	}
-	
+
 	public Player getPlayer() {
-		return Bukkit.getServer().getPlayer(uuid);
+		return this.player;
 	}
-	
+
 	public boolean hasPermission(Permission permission) {
 		return getPlayer().hasPermission(permission.getString());
 	}
-	
+
 	public void showMenu() {
 		MainMenu menu = new MainMenu(this);
 		menu.show();
 	}
-	
+
 	public PlayerConfiguration getConfig() {
 		return config;
 	}
+
+	public void setCalculator(TrajectoryCalculator calculator) {
+		this.currentCalculator = calculator;
+	}
+
+	public TrajectoryCalculator getCalculator() {
+		return currentCalculator;
+	}
+
+	public boolean isValidForTrajectoryRender() {
+		if (currentCalculator == null)
+			return false;
+		else if (config.isEnabled() && config.isTrajectoryEnabled(currentCalculator.getType())) {
+			if(currentCalculator.getType() == CalculatorType.ARROW && playerHoldingBowTime != 0)
+				return false;
+			return true;
+		}
+		return false;
+	}
+
+	public void drawTrajectory() {
+		if(currentCalculator != null) {
+			Location location = player.getEyeLocation();
+			for (Vector vector : currentCalculator.getTrajectory()) {
+				location.add(vector);
+				// if(location.getBlock().getType().isSolid()) This may cause performance issues
+				/// break;
+				sendParticle(location);
+			}
+		}
+	}
 	
-	public void sendParticle(Player player, Location location, CalculatorType type) {
-		Particle particleEffect = config.getTrajectoryParticle(type);
-		player.spawnParticle(particleEffect, location, 3,0,0,0,0);
+	private void sendParticle(Location location) {
+		if (player.getEyeLocation().distance(location) >= config.getDistanceLevel(currentCalculator.getType())) {
+			Particle particleEffect = config.getTrajectoryParticle(currentCalculator.getType());
+			this.player.spawnParticle(particleEffect, location, 3, 0, 0, 0, 0);
+		}
+	}
+
+	public void setPlayerHoldingBowTime(long playerHoldingBowTime) {
+		this.playerHoldingBowTime = playerHoldingBowTime;
+	}
+
+	public long getPlayerHoldingBowTime() {
+		return playerHoldingBowTime;
 	}
 }

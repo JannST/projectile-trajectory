@@ -42,6 +42,8 @@ public enum CalculatorType {
 	}
 	
 	public static CalculatorType getByItemStack(ItemStack item) {
+		if(item == null)
+			return null;
 		for(CalculatorType type : values()) {
 			if(type.getMaterial() == item.getType()) {
 				if(type == CalculatorType.POTION) {

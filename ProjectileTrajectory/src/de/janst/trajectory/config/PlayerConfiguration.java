@@ -20,9 +20,7 @@ public class PlayerConfiguration extends Configuration {
 		super("/players/" + uuid.toString() + ".yml" , false);
 		
 		config.addDefaults(PlayerConfigurationDefaults.DEFAULTS.getDefaults());
-		if(hasChanges) {
-			save();
-		}
+		save(false);
 	}
 	
 	public boolean isEnabled() {

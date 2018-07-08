@@ -3,7 +3,6 @@ package de.janst.trajectory.listener;
 import java.io.IOException;
 import java.util.logging.Level;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,11 +15,14 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 
 import de.janst.trajectory.TrajectorySimulator;
+import de.janst.trajectory.calculator.CalculatorType;
 import de.janst.trajectory.calculator.TrajectoryCalculator;
-import de.janst.trajectory.util.TrajectoryCalculatorHelper;
+import de.janst.trajectory.playerhandling.PlayerObject;
 import de.janst.trajectory.util.Permission;
+import de.janst.trajectory.util.TrajectoryCalculatorHelper;
 
 public class PlayerListener implements Listener {
 
@@ -32,14 +34,15 @@ public class PlayerListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onItemChange(PlayerItemHeldEvent event) {
-		if(!event.isCancelled() && event.getPlayer().hasPermission(Permission.USE.getString())) {
-			TrajectoryCalculator calculator = TrajectoryCalculatorHelper.getFromItem(event.getNewSlot(), event.getPlayer().getInventory());
+		PlayerObject playerObject = TrajectorySimulator.getInstance().getPlayerHandler().getPlayerObject(event.getPlayer().getUniqueId());
+		if(!event.isCancelled() && playerObject != null && playerObject.hasPermission(Permission.USE)) {
+			TrajectoryCalculator calculator = TrajectoryCalculatorHelper.getCalculator(event.getPlayer().getInventory().getItem(event.getNewSlot()), playerObject);
 			
 			if(calculator != null) {
-				trajectorySimulator.getTrajectoryScheduler().addCalculator(event.getPlayer().getUniqueId(), calculator);
+				playerObject.setCalculator(calculator);
 			}
-			else if(trajectorySimulator.getTrajectoryScheduler().hasCalculator(event.getPlayer().getUniqueId())) {
-				trajectorySimulator.getTrajectoryScheduler().removeCalculator(event.getPlayer().getUniqueId());
+			else if(playerObject.getCalculator() != null) {
+				playerObject.setCalculator(null);
 			}
 		}
 	}
@@ -84,12 +87,16 @@ public class PlayerListener implements Listener {
 	public void onThrow(ProjectileLaunchEvent event) {
 		if(event.getEntity().getShooter() instanceof Player && !event.isCancelled()) {
 			Player player = (Player) event.getEntity().getShooter();
-			if(player.hasPermission(Permission.USE.getString())) {
-				if(player.getItemInHand() == null || player.getItemInHand().getAmount() > 0)
+			PlayerObject playerObject = TrajectorySimulator.getInstance().getPlayerHandler().getPlayerObject(player.getUniqueId());
+			
+			if(playerObject != null && playerObject.hasPermission(Permission.USE)) {
+				ItemStack inHand = player.getInventory().getItemInMainHand();
+				
+				if(inHand == null || inHand.getAmount() > 0)
 					return;
-				Material material = player.getItemInHand().getType();
-				if(material != null && (material == Material.SNOW_BALL || material == Material.ENDER_PEARL || material == Material.EGG || material == Material.POTION)) {
-					trajectorySimulator.getTrajectoryScheduler().removeCalculator(player.getUniqueId());
+				
+				if(CalculatorType.getByItemStack(inHand) != null) {
+					playerObject.setCalculator(null);
 				}
 			}
 		}

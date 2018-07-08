@@ -1,14 +1,15 @@
-package de.janst.trajectory;
+package de.janst.trajectory.scheduler;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import de.janst.trajectory.TrajectorySimulator;
 import de.janst.trajectory.calculator.CalculatorType;
+import de.janst.trajectory.playerhandling.PlayerObject;
 import de.janst.trajectory.util.TrajectoryCalculatorHelper;
 
 public class InventoryScheduler implements Runnable {
@@ -35,7 +36,7 @@ public class InventoryScheduler implements Runnable {
 			players.add(uuid);
 		}
 	}
-	
+	//TODO this is never called???
 	public void removePlayer(UUID uuid) {
 		players.remove(uuid);
 	}
@@ -43,25 +44,25 @@ public class InventoryScheduler implements Runnable {
 	@Override
 	public void run() {
 		CalculatorType type;
-		Player player;
+		PlayerObject playerObject;
 		ItemStack itemStack;
 		for(UUID uuid : players) {
-			player = trajectorySimulator.getServer().getPlayer(uuid);
-			if(player != null) {
-				itemStack = player.getInventory().getItemInMainHand();
-				type = itemStack != null ? CalculatorType.getByItemStack(itemStack) : null;
+			playerObject = trajectorySimulator.getPlayerHandler().getPlayerObject(uuid);
+			if(playerObject != null) {
+				itemStack = playerObject.getPlayer().getInventory().getItemInMainHand();
+				type = CalculatorType.getByItemStack(itemStack);
 				
 				if(type == null) {
-					trajectorySimulator.getTrajectoryScheduler().removeCalculator(uuid);
+					playerObject.setCalculator(null);
 				}
 				else {
-					if(trajectorySimulator.getTrajectoryScheduler().hasCalculator(uuid)) {
-						if(trajectorySimulator.getTrajectoryScheduler().getCalculator(uuid).getType() != type) {
-							trajectorySimulator.getTrajectoryScheduler().addCalculator(uuid, TrajectoryCalculatorHelper.getCalculator(itemStack, uuid));
+					if(playerObject.getCalculator() != null) {
+						if(playerObject.getCalculator().getType() != type) {
+							playerObject.setCalculator(TrajectoryCalculatorHelper.getCalculator(type, playerObject));
 						}
 					}
 					else {
-						trajectorySimulator.getTrajectoryScheduler().addCalculator(uuid, TrajectoryCalculatorHelper.getCalculator(itemStack, uuid));
+						playerObject.setCalculator(TrajectoryCalculatorHelper.getCalculator(type, playerObject));	
 					}
 				}
 			}

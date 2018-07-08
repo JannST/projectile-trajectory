@@ -38,7 +38,9 @@ public class Configuration {
 		config = YamlConfiguration.loadConfiguration(configFile);
 	}
 	
-	public void save() throws IOException {
+	public void save(boolean force) throws IOException {
+		if(!hasChanges && !force)
+			return;
         config.save(configFile);
         hasChanges = false;
 	}

@@ -16,6 +16,9 @@ import de.janst.trajectory.menu.TrajectoryCustomizeMenu;
 import de.janst.trajectory.menu.api.MenuSheet;
 import de.janst.trajectory.menu.api.listener.InventoryListener;
 import de.janst.trajectory.playerhandling.PlayerHandler;
+import de.janst.trajectory.scheduler.FileSaveScheduler;
+import de.janst.trajectory.scheduler.InventoryScheduler;
+import de.janst.trajectory.scheduler.TrajectoryScheduler;
 
 public class TrajectorySimulator extends JavaPlugin {
 
@@ -38,7 +41,7 @@ public class TrajectorySimulator extends JavaPlugin {
 		TrajectoryCalculator.MAXIMAL_LENGTH = config.getMaximalLength();
 		new PlayerConfigurationDefaults();
 		
-		trajectoryScheduler = new TrajectoryScheduler(this, config.getTickSpeed());
+		trajectoryScheduler = new TrajectoryScheduler(config.getTickSpeed());
 		inventoryScheduler = new InventoryScheduler(this);
 		this.playerHandler = new PlayerHandler(this);
 		this.playerHandler.loadOnlinePlayers();
@@ -57,7 +60,7 @@ public class TrajectorySimulator extends JavaPlugin {
 		getCommand("trajectory").setExecutor(menuCommand);
 		getCommand("tra").setExecutor(menuCommand);
 		
-		new FileSaveScheduler(this, config.getSaveInterval());
+		new FileSaveScheduler(config.getSaveInterval());
 		getLogger().info("Plugin enabled");
 	}
 
