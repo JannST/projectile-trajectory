@@ -1,6 +1,5 @@
 package de.janst.trajectory.config;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,12 +8,10 @@ import java.util.UUID;
 import org.bukkit.Particle;
 
 import de.janst.trajectory.calculator.CalculatorType;
-import de.janst.trajectory.util.RGBColor;
 
 public class PlayerConfiguration extends ConfigWithDefaults {
 
 	private final Map<CalculatorType, Particle> particles = new HashMap<CalculatorType, Particle>();
-	private final Map<CalculatorType, Color> particleColors = new HashMap<CalculatorType, Color>();
 	
 	public PlayerConfiguration(UUID uuid) throws IOException {
 		super("/players/" + uuid.toString() + ".yml", new PlayerConfigurationDefaults("DefaultPlayerConfig.yml"));
@@ -52,12 +49,6 @@ public class PlayerConfiguration extends ConfigWithDefaults {
 			particles.put(type, effect);
 			return effect;
 		}
-	}
-	
-	public void setParticleColor(RGBColor color, CalculatorType type) {
-		Color awtColor = new Color(color.getRed(), color.getGreen(), color.getBlue());
-		particleColors.put(type, awtColor);
-		set(type.getName()+".color", color.getName());
 	}
 	
 	public void updateDistanceLevel(CalculatorType type){

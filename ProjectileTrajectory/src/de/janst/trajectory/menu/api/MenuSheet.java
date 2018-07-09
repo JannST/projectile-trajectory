@@ -12,8 +12,6 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.janst.trajectory.TrajectorySimulator;
-
 public abstract class MenuSheet {
 
 	private static int idCount;
@@ -30,8 +28,6 @@ public abstract class MenuSheet {
 	private boolean hasChildMenu;
 	private Player player;
 	private JavaPlugin plugin;
-	
-//	public Map<String, MenuSheet> menus = new HashMap<String, MenuSheet>();
 	
 	private MenuSheet(JavaPlugin plugin) {
 		super();
@@ -168,7 +164,7 @@ public abstract class MenuSheet {
 	}
 	
 	public Inventory createInventory(JavaPlugin plugin) {
-		Inventory inv = TrajectorySimulator.getInstance().getServer().createInventory(null, size, title);
+		Inventory inv = plugin.getServer().createInventory(null, size, title);
 		inv.setContents(this.contents);
 		this.inventory = inv;
 		return inv;

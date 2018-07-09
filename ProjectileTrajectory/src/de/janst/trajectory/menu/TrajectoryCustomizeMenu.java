@@ -14,7 +14,7 @@ import de.janst.trajectory.playerhandling.PlayerObject;
 import de.janst.trajectory.util.ParticleItems;
 import de.janst.trajectory.util.Permission;
 
-public class TrajectoryCustomizeMenu extends MenuSheet {
+public class TrajectoryCustomizeMenu extends MenuSheet implements SlotListener{
 
 	private final PlayerObject playerObject;
 	private final boolean allowChange;
@@ -22,7 +22,7 @@ public class TrajectoryCustomizeMenu extends MenuSheet {
 
 	public TrajectoryCustomizeMenu(MenuSheet parent, PlayerObject playerObject, CalculatorType type) {
 		super(parent.getPlugin(), "�6�l"+type.getName()+" trajectory", 9, parent);
-		registerListener("base", new MainListener());
+		registerListener("base", this);
 		this.playerObject = playerObject;
 		this.type = type;
 		boolean pluginAllowParticleChange = TrajectorySimulator.getInstance().getPluginConfig().allowParticleChange();
@@ -67,7 +67,6 @@ public class TrajectoryCustomizeMenu extends MenuSheet {
 	}
 	
 	
-	private class MainListener implements SlotListener {
 
 		@Override
 		public void clickSlot(InventoryClickEvent event) {
@@ -106,6 +105,5 @@ public class TrajectoryCustomizeMenu extends MenuSheet {
 
 		}
 		
-	}
 	
 }

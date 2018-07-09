@@ -13,14 +13,14 @@ import de.janst.trajectory.menu.api.MenuSheet;
 import de.janst.trajectory.menu.api.SlotListener;
 import de.janst.trajectory.playerhandling.PlayerObject;
 
-public class MainMenu extends MenuSheet {
+public class MainMenu extends MenuSheet implements SlotListener {
 
 	private final PlayerObject playerObject;
 
 	public MainMenu(PlayerObject playerObject) {
 		super(TrajectorySimulator.getInstance(), "�2�lTrajectory Menu", 9, playerObject.getPlayer());
 		this.playerObject = playerObject;
-		registerListener("base", new MainListener());
+		registerListener("base", this);
 		initContents();
 	}
 
@@ -39,62 +39,56 @@ public class MainMenu extends MenuSheet {
 		setContent(8, new ItemCreator("�6�lCustomize Enderpearl trajectory", Material.ENDER_PEARL, 1).toItem());
 		updateInventory();
 	}
-	
+
 	private void setEnabledItem() {
 		String title = playerObject.getConfig().isEnabled() ? "�4�lDisable trajectory" : "�2�lEnable trajectory";
-		byte data = playerObject.getConfig().isEnabled() ? (byte)14 : (byte)13;
+		byte data = playerObject.getConfig().isEnabled() ? (byte) 14 : (byte) 13;
 		setContent(1, new ItemCreator(title, Material.WOOL, 1, data, (short) 0).toItem());
 	}
-	
-	private class MainListener implements SlotListener {
 
-		@Override
-		public void clickSlot(InventoryClickEvent event) {
-			int slot = event.getSlot();
-			if(event.getSlot() == 0) {
-				shutMenuConstruct();
+	@Override
+	public void clickSlot(InventoryClickEvent event) {
+		int slot = event.getSlot();
+		if (event.getSlot() == 0) {
+			shutMenuConstruct();
+		} else if (event.getSlot() == 1) {
+			playerObject.getConfig().setEnabled(!playerObject.getConfig().isEnabled());
+			setEnabledItem();
+			updateInventory();
+		} else if (slot >= 4 && slot <= 8) {
+			CalculatorType type = null;
+			switch (slot) {
+			case 4:
+				type = CalculatorType.ARROW;
+				break;
+			case 5:
+				type = CalculatorType.POTION;
+				break;
+			case 6:
+				type = CalculatorType.SNOWBALL;
+				break;
+			case 7:
+				type = CalculatorType.EGG;
+				break;
+			case 8:
+				type = CalculatorType.ENDERPEARL;
+				break;
 			}
-			else if(event.getSlot() == 1) {
-				playerObject.getConfig().setEnabled(!playerObject.getConfig().isEnabled());
-				setEnabledItem();
-				updateInventory();
-			}
-			else if(slot >= 4 && slot <= 8) {
-				CalculatorType type = null;
-				switch (slot) {
-				case 4:
-					type = CalculatorType.ARROW;
-					break;
-				case 5:
-					type = CalculatorType.POTION;
-					break;
-				case 6:
-					type = CalculatorType.SNOWBALL;
-					break;
-				case 7:
-					type = CalculatorType.EGG;
-					break;
-				case 8:
-					type = CalculatorType.ENDERPEARL;
-					break;
-				}
-				standby();
-				new TrajectoryCustomizeMenu(MainMenu.this, playerObject, type).show();
-			}
+			standby();
+			new TrajectoryCustomizeMenu(MainMenu.this, playerObject, type).show();
 		}
+	}
 
-		@Override
-		public void leftClick(InventoryClickEvent event) {
-		}
+	@Override
+	public void leftClick(InventoryClickEvent event) {
+	}
 
-		@Override
-		public void rightClick(InventoryClickEvent event) {
-		}
+	@Override
+	public void rightClick(InventoryClickEvent event) {
+	}
 
-		@Override
-		public void shiftClick(InventoryClickEvent event) {
-		}
-		
+	@Override
+	public void shiftClick(InventoryClickEvent event) {
 	}
 
 }
