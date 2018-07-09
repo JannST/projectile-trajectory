@@ -4,13 +4,10 @@ import java.io.IOException;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class PlayerConfigurationDefaults extends Configuration {
-
-	public static PlayerConfigurationDefaults DEFAULTS;
+public class PlayerConfigurationDefaults extends Config {
 	
-	public PlayerConfigurationDefaults() throws IOException {
-		super("DefaultPlayerConfig.yml", true);
-		DEFAULTS = this;
+	public PlayerConfigurationDefaults(String fileName) throws IOException {
+		super(fileName);
 	}
 	
 	public YamlConfiguration getDefaults() {

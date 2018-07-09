@@ -54,7 +54,7 @@ public class NormalCalculator extends TrajectoryCalculator {
 	    double y = location.getY()+motY;
 	    double totalDistance = 0;
 	    
-	    while(y > 0 && totalDistance < MAXIMAL_LENGTH) {
+	    while(y > 0 && totalDistance < maximalLength) {
 			motY *= mod;
 			motX *= mod;
 			motZ *= mod;

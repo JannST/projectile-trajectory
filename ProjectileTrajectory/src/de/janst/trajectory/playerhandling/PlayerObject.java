@@ -58,7 +58,7 @@ public class PlayerObject {
 		if (currentCalculator == null)
 			return false;
 		else if (config.isEnabled() && config.isTrajectoryEnabled(currentCalculator.getType())) {
-			if(currentCalculator.getType() == CalculatorType.ARROW && playerHoldingBowTime != 0)
+			if(currentCalculator.getType() == CalculatorType.ARROW && playerHoldingBowTime == 0)
 				return false;
 			return true;
 		}
@@ -69,10 +69,10 @@ public class PlayerObject {
 		if(currentCalculator != null) {
 			Location location = player.getEyeLocation();
 			for (Vector vector : currentCalculator.getTrajectory()) {
+				if(location.getBlock().getType().isSolid())
+				break;
+				sendParticle(location.clone().add(vector.multiply(0.5 + Math.random())));
 				location.add(vector);
-				// if(location.getBlock().getType().isSolid()) This may cause performance issues
-				/// break;
-				sendParticle(location);
 			}
 		}
 	}

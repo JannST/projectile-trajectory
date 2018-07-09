@@ -13,15 +13,12 @@ import de.janst.trajectory.menu.api.SlotListener;
 import de.janst.trajectory.playerhandling.PlayerObject;
 import de.janst.trajectory.util.ParticleItems;
 import de.janst.trajectory.util.Permission;
-import de.janst.trajectory.util.RGBColor;
 
 public class TrajectoryCustomizeMenu extends MenuSheet {
 
 	private final PlayerObject playerObject;
-	public static boolean ALLOWPARTICLECHANGE = true;
 	private final boolean allowChange;
 	private final CalculatorType type;
-	private boolean colorable = false;
 
 	public TrajectoryCustomizeMenu(MenuSheet parent, PlayerObject playerObject, CalculatorType type) {
 		super(parent.getPlugin(), "�6�l"+type.getName()+" trajectory", 9, parent);
@@ -63,7 +60,7 @@ public class TrajectoryCustomizeMenu extends MenuSheet {
 	
 	private void setDistanceItem() {
 		ItemCreator creator = new ItemCreator("�6�lUpdate distance", Material.COMPASS, playerObject.getConfig().getDistanceLevel(type));
-		creator.addLore("�aActual distance: �e" + playerObject.getConfig().getDistanceLevel(type)*2 + " Blocks");
+		creator.addLore("�aCurrent distance: �e" + playerObject.getConfig().getDistanceLevel(type)*2 + " Blocks");
 		creator.addLore("�eInfo: with this option you can set the minimal distance");
 		creator.addLore("�ebetween you and the displayed particles");
 		setContent(2, creator.toItem());
@@ -91,10 +88,6 @@ public class TrajectoryCustomizeMenu extends MenuSheet {
 			else if(event.getSlot() == 5 && allowChange) {
 				standby();
 				new ParticleSelectMenu(TrajectoryCustomizeMenu.this, playerObject, type).show();
-			}
-			else if(event.getSlot() == 8 && colorable && allowChange) {
-				standby();
-				new ColorSelectMenu(TrajectoryCustomizeMenu.this, playerObject, type).show();
 			}
 		}
 

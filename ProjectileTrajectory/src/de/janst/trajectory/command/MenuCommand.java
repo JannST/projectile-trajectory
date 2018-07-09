@@ -6,15 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.janst.trajectory.TrajectorySimulator;
+import de.janst.trajectory.playerhandling.PlayerObject;
 import de.janst.trajectory.util.Permission;
 
 public class MenuCommand implements CommandExecutor {
-
-	private final TrajectorySimulator trajectorySimulator;
-
-	public MenuCommand(TrajectorySimulator trajectorySimulator) {
-		this.trajectorySimulator = trajectorySimulator;
-	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -24,14 +19,16 @@ public class MenuCommand implements CommandExecutor {
 		}
 		if(label.equalsIgnoreCase("trajectory") || label.equalsIgnoreCase("tra")) {
 			Player player = (Player)sender;
-			if(player.hasPermission(Permission.USE.getString())) {
-				if(trajectorySimulator.getPlayerHandler().containsPlayerObject(player.getUniqueId())) {
-
+			PlayerObject playerObject = TrajectorySimulator.getInstance().getPlayerHandler().getPlayerObject(player.getUniqueId());
+			
+			if(playerObject != null) {
+				if(playerObject.hasPermission(Permission.USE)) {
+					playerObject.showMenu();
 				}
-			}
-			else {
-				player.sendMessage("�cSorry pal, you are not allowed to use this command");
-				return true;
+				else {
+					player.sendMessage("�cSorry pal, you are not allowed to use this command");
+					return true;
+				}
 			}
 		}
 		return false;

@@ -8,18 +8,19 @@ import java.util.UUID;
 
 import org.bukkit.Particle;
 
+import de.janst.trajectory.TrajectorySimulator;
 import de.janst.trajectory.calculator.CalculatorType;
 import de.janst.trajectory.util.RGBColor;
 
-public class PlayerConfiguration extends Configuration {
+public class PlayerConfiguration extends Config {
 
 	private final Map<CalculatorType, Particle> particles = new HashMap<CalculatorType, Particle>();
 	private final Map<CalculatorType, Color> particleColors = new HashMap<CalculatorType, Color>();
 	
 	public PlayerConfiguration(UUID uuid) throws IOException {
-		super("/players/" + uuid.toString() + ".yml" , false);
+		super("/players/" + uuid.toString() + ".yml");
 		
-		config.addDefaults(PlayerConfigurationDefaults.DEFAULTS.getDefaults());
+		config.addDefaults(TrajectorySimulator.getInstance().getPlayerConfigurationDefaults().getDefaults());
 		save(false);
 	}
 	
@@ -28,7 +29,7 @@ public class PlayerConfiguration extends Configuration {
 	}
 	
 	public void setEnabled(boolean enabled) {
-		config.set("enabled", enabled);
+		set("enabled", enabled);
 	}
 	
 	public boolean isTrajectoryEnabled(CalculatorType type) {
@@ -36,12 +37,12 @@ public class PlayerConfiguration extends Configuration {
 	}
 	
 	public void setTrajectoryEnabled(CalculatorType type, boolean enabled) {
-		config.set(type.getName()+".enabled", enabled);
+		set(type.getName()+".enabled", enabled);
 	}
 	
 	public void setTrajectoryParticle(Particle particle, CalculatorType type) {
 		particles.put(type, particle);
-		config.set(type.getName()+".particle", particle.toString());
+		set(type.getName()+".particle", particle.toString());
 	}
 	
 	public Particle getTrajectoryParticle(CalculatorType type) {
@@ -49,7 +50,6 @@ public class PlayerConfiguration extends Configuration {
 			return particles.get(type);
 		}
 		else {
-			System.out.println(config.getString(type.getName()+".particle"));
 			Particle effect = Particle.valueOf(config.getString(type.getName()+".particle"));
 			particles.put(type, effect);
 			return effect;
@@ -59,39 +59,19 @@ public class PlayerConfiguration extends Configuration {
 	public void setParticleColor(RGBColor color, CalculatorType type) {
 		Color awtColor = new Color(color.getRed(), color.getGreen(), color.getBlue());
 		particleColors.put(type, awtColor);
-		config.set(type.getName()+".color", color.getName());
-	}
-	
-	public Color getOrdinaryParticleColor(CalculatorType type) {
-		if(particleColors.containsKey(type)) {
-			return particleColors.get(type);
-		}
-		else {
-			RGBColor color = RGBColor.fromName(config.getString(type.getName()+".color"));
-			Color awtColor = new Color(color.getRed(), color.getGreen(), color.getBlue());
-			particleColors.put(type, awtColor);
-			return awtColor;
-		}
-	}
-	
-	public RGBColor getParticleColor(CalculatorType type) {
-		return RGBColor.fromName(config.getString(type.getName()+".color"));
+		set(type.getName()+".color", color.getName());
 	}
 	
 	public void updateDistanceLevel(CalculatorType type){
 		int level = getDistanceLevel(type);
-		if(level+1 > 10) 
-			level = 0;
+		if(level+1 > 12) 
+			level = 1;
 		else 
 			level++;
-		config.set(type.getName()+".distance-level", level);
+		set(type.getName()+".distance-level", level);
 	}
 	
 	public int getDistanceLevel(CalculatorType type) {
 		return config.getInt(type.getName()+".distance-level");
-	}
-	
-	public void setChanges(boolean b){
-		hasChanges = b;
 	}
 }

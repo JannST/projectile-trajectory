@@ -1,18 +1,13 @@
 package de.janst.trajectory;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.janst.trajectory.calculator.TrajectoryCalculator;
 import de.janst.trajectory.command.MenuCommand;
 import de.janst.trajectory.config.PlayerConfigurationDefaults;
 import de.janst.trajectory.config.PluginConfiguration;
 import de.janst.trajectory.listener.BowListener;
 import de.janst.trajectory.listener.PlayerListener;
-import de.janst.trajectory.menu.TrajectoryCustomizeMenu;
 import de.janst.trajectory.menu.api.MenuSheet;
 import de.janst.trajectory.menu.api.listener.InventoryListener;
 import de.janst.trajectory.playerhandling.PlayerHandler;
@@ -23,45 +18,46 @@ import de.janst.trajectory.scheduler.TrajectoryScheduler;
 public class TrajectorySimulator extends JavaPlugin {
 
 	private static TrajectorySimulator INSTANCE;
-	private static TrajectorySimulator plugin;
-	private TrajectoryScheduler trajectoryScheduler;
-	private BowListener bowListener;
 	private PlayerHandler playerHandler;
 	private PluginConfiguration config;
 	private InventoryScheduler inventoryScheduler;
+	private PlayerConfigurationDefaults playerConfigurationDefaults;
 	
 	public void onEnable() {
 		INSTANCE = this;
-		TrajectorySimulator.plugin = this;
-		setUpFiles();
 		try {
-		config = new PluginConfiguration();
-
-		TrajectoryCustomizeMenu.ALLOWPARTICLECHANGE = config.allowParticleChange();
-		TrajectoryCalculator.MAXIMAL_LENGTH = config.getMaximalLength();
-		new PlayerConfigurationDefaults();
+		setupFiles();
+		this.config = new PluginConfiguration("config.yml");
+		this.playerConfigurationDefaults = new PlayerConfigurationDefaults("DefaultPlayerConfig.yml");
 		
-		trajectoryScheduler = new TrajectoryScheduler(config.getTickSpeed());
-		inventoryScheduler = new InventoryScheduler(this);
 		this.playerHandler = new PlayerHandler(this);
 		this.playerHandler.loadOnlinePlayers();
 		
-		} catch (IOException e) {
-			getLogger().log(Level.SEVERE, "Could not load online players");
-			e.printStackTrace();
+		TrajectoryScheduler trajectoryScheduler = new TrajectoryScheduler();
+		trajectoryScheduler.start(config.getTickSpeed());
+		
+		this.inventoryScheduler = new InventoryScheduler();
+		this.inventoryScheduler.start(5L);
+
+		if(!config.saveInstant()) {
+			FileSaveScheduler fileSaveScheduler = new FileSaveScheduler();
+			fileSaveScheduler.start(config.getSaveInterval()*60*20);
 		}
 		
 		getServer().getPluginManager().registerEvents(new InventoryListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
-		this.bowListener = new BowListener();
-		getServer().getPluginManager().registerEvents(bowListener, this);
+		getServer().getPluginManager().registerEvents(new BowListener(), this);
 		
-		MenuCommand menuCommand = new MenuCommand(this);
+		MenuCommand menuCommand = new MenuCommand();
 		getCommand("trajectory").setExecutor(menuCommand);
 		getCommand("tra").setExecutor(menuCommand);
 		
-		new FileSaveScheduler(config.getSaveInterval());
-		getLogger().info("Plugin enabled");
+		getLogger().info("Plugin enabled!");
+		
+		} catch (Exception e) {
+			getLogger().info("Failed to enable Plugin!");
+			e.printStackTrace();
+		}
 	}
 
 	public void onDisable() {
@@ -70,27 +66,7 @@ public class TrajectorySimulator extends JavaPlugin {
 		getPlayerHandler().saveAll();
 	}
 	
-	public InventoryScheduler getInventoryScheduler() {
-		return inventoryScheduler;
-	}
-	
-	public BowListener getBowListener() {
-		return this.bowListener;
-	}
-
-	public PlayerHandler getPlayerHandler() {
-		return playerHandler;
-	}
-
-	public TrajectoryScheduler getTrajectoryScheduler() {
-		return trajectoryScheduler;
-	}
-
-	public static TrajectorySimulator getPlugin() {
-		return TrajectorySimulator.plugin;
-	}
-	
-	public void setUpFiles() {
+	public void setupFiles() {
 		File file = getDataFolder();
 		if(!file.exists()) {
 			file.mkdir();
@@ -101,8 +77,20 @@ public class TrajectorySimulator extends JavaPlugin {
 		}
 	}
 	
+	public InventoryScheduler getInventoryScheduler() {
+		return inventoryScheduler;
+	}
+
+	public PlayerHandler getPlayerHandler() {
+		return playerHandler;
+	}
+	
 	public PluginConfiguration getPluginConfig() {
 		return this.config;
+	}
+	
+	public PlayerConfigurationDefaults getPlayerConfigurationDefaults() {
+		return playerConfigurationDefaults;
 	}
 	
 	public static TrajectorySimulator getInstance() {

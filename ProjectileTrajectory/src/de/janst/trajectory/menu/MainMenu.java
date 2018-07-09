@@ -1,7 +1,6 @@
 package de.janst.trajectory.menu;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.Potion;
@@ -19,7 +18,7 @@ public class MainMenu extends MenuSheet {
 	private final PlayerObject playerObject;
 
 	public MainMenu(PlayerObject playerObject) {
-		super(TrajectorySimulator.getInstance(), "§2§lTrajectory Menu", 9, playerObject.getPlayer());
+		super(TrajectorySimulator.getInstance(), "ï¿½2ï¿½lTrajectory Menu", 9, playerObject.getPlayer());
 		this.playerObject = playerObject;
 		registerListener("base", new MainListener());
 		initContents();
@@ -28,21 +27,21 @@ public class MainMenu extends MenuSheet {
 	@Override
 	public void initContents() {
 		setEnabledItem();
-		setContent(0, new ItemCreator("§4§lClose menu", Material.BUCKET, 1).toItem());
-		setContent(4, new ItemCreator("§6§lCustomize Arrow trajectory", Material.BOW, 1).toItem());
-		ItemStack stack = new ItemCreator("§6§lCustomize Potion trajectory", Material.POTION, 1).toItem();
+		setContent(0, new ItemCreator("ï¿½4ï¿½lClose menu", Material.BUCKET, 1).toItem());
+		setContent(4, new ItemCreator("ï¿½6ï¿½lCustomize Arrow trajectory", Material.BOW, 1).toItem());
+		ItemStack stack = new ItemCreator("ï¿½6ï¿½lCustomize Potion trajectory", Material.POTION, 1).toItem();
 		Potion potion = new Potion(PotionType.FIRE_RESISTANCE);
 		potion.setSplash(true);
 		potion.apply(stack);
 		setContent(5, stack);
-		setContent(6, new ItemCreator("§6§lCustomize Snowball trajectory", Material.SNOW_BALL, 1).toItem());
-		setContent(7, new ItemCreator("§6§lCustomize Egg trajectory", Material.EGG, 1).toItem());
-		setContent(8, new ItemCreator("§6§lCustomize Enderpearl trajectory", Material.ENDER_PEARL, 1).toItem());
+		setContent(6, new ItemCreator("ï¿½6ï¿½lCustomize Snowball trajectory", Material.SNOW_BALL, 1).toItem());
+		setContent(7, new ItemCreator("ï¿½6ï¿½lCustomize Egg trajectory", Material.EGG, 1).toItem());
+		setContent(8, new ItemCreator("ï¿½6ï¿½lCustomize Enderpearl trajectory", Material.ENDER_PEARL, 1).toItem());
 		updateInventory();
 	}
 	
 	private void setEnabledItem() {
-		String title = playerObject.getConfig().isEnabled() ? "§4§lDisable trajectory" : "§2§lEnable trajectory";
+		String title = playerObject.getConfig().isEnabled() ? "ï¿½4ï¿½lDisable trajectory" : "ï¿½2ï¿½lEnable trajectory";
 		byte data = playerObject.getConfig().isEnabled() ? (byte)14 : (byte)13;
 		setContent(1, new ItemCreator(title, Material.WOOL, 1, data, (short) 0).toItem());
 	}

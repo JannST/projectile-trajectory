@@ -168,7 +168,7 @@ public abstract class MenuSheet {
 	}
 	
 	public Inventory createInventory(JavaPlugin plugin) {
-		Inventory inv = TrajectorySimulator.getPlugin().getServer().createInventory(null, size, title);
+		Inventory inv = TrajectorySimulator.getInstance().getServer().createInventory(null, size, title);
 		inv.setContents(this.contents);
 		this.inventory = inv;
 		return inv;

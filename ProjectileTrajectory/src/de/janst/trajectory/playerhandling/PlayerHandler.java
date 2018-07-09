@@ -28,6 +28,7 @@ public class PlayerHandler {
 	}
 
 	public void addPlayer(Player player) throws IOException {
+		System.out.println("adding player");
 		if (player == null) {
 			return;
 		}
@@ -38,7 +39,16 @@ public class PlayerHandler {
 	}
 
 	public void removePlayer(UUID uuid) {
-		playerObjects.remove(uuid);
+		PlayerObject playerObject = getPlayerObject(uuid);
+		if(playerObject != null) {
+			try {
+				playerObject.getConfig().save(true);
+			} catch (IOException e) {
+				trajectorySimulator.getLogger().log(Level.WARNING, "Could not save player settings for " + playerObject.getPlayer().getName());
+				e.printStackTrace();
+			}
+			playerObjects.remove(uuid);
+		}
 	}
 
 	public PlayerObject getPlayerObject(UUID uuid) {

@@ -2,13 +2,13 @@ package de.janst.trajectory.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import de.janst.trajectory.TrajectorySimulator;
 
-public class Configuration {
-	
-	protected final TrajectorySimulator trajectorySimulator;
+public class Config {
 
 	protected File configFile = null;
 	protected final String fileName;
@@ -16,31 +16,42 @@ public class Configuration {
 	protected boolean hasChanges = false;
 	protected boolean NEWFILE = false;
 	
-	public Configuration(String file, boolean hasResource) throws IOException {
-		this.trajectorySimulator = TrajectorySimulator.getPlugin();
+	public Config(String file) throws IOException {
 		this.fileName = file;
-		configFile = new File(trajectorySimulator.getDataFolder(), file);
+		configFile = new File(TrajectorySimulator.getInstance().getDataFolder(), file);
 		
-		if(!configFile.exists()) {
-			hasChanges = true;
-			NEWFILE = true;
-			if(hasResource) {
-				trajectorySimulator.saveResource(file, true);
-			}
-			else {
-				configFile.createNewFile();
-			}
-		}
+		setupFile();
 		loadConfig();
+	}
+	
+	public void setupFile() throws IOException {
+		if(!configFile.exists()) {
+			configFile.createNewFile();
+		}
 	}
 	
 	private void loadConfig() {
 		config = YamlConfiguration.loadConfiguration(configFile);
 	}
 	
+	protected void set(String key, Object value) {
+		config.set(key, value);
+		this.hasChanges = true;
+		if(TrajectorySimulator.getInstance().getPluginConfig().saveInstant()) {
+			try {
+				save(false);
+			} catch (IOException e) {
+				TrajectorySimulator.getInstance().getLogger().log(Level.WARNING, "Could not save player settings");
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public void save(boolean force) throws IOException {
+		System.out.println("save me");
 		if(!hasChanges && !force)
 			return;
+		System.out.println("saving your shit");
         config.save(configFile);
         hasChanges = false;
 	}

@@ -6,9 +6,8 @@ import de.janst.trajectory.playerhandling.PlayerObject;
 
 public class TrajectoryScheduler extends AbstractScheduler {
 
-	public TrajectoryScheduler(int speed) {
+	public TrajectoryScheduler() {
 		super(TrajectorySimulator.getInstance());
-		start(speed);
 	}
 
 	@Override
