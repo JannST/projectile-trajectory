@@ -28,7 +28,6 @@ public class PlayerHandler {
 	}
 
 	public void addPlayer(Player player) throws IOException {
-		System.out.println("adding player");
 		if (player == null) {
 			return;
 		}

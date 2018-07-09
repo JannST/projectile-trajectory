@@ -1,18 +1,8 @@
-package de.janst.trajectory.util;
+package de.janst.trajectory.calculator;
 
-import org.bukkit.inventory.ItemStack;
-import de.janst.trajectory.calculator.ArrowCalculator;
-import de.janst.trajectory.calculator.CalculatorType;
-import de.janst.trajectory.calculator.NormalCalculator;
-import de.janst.trajectory.calculator.TrajectoryCalculator;
 import de.janst.trajectory.playerhandling.PlayerObject;
 
-public class TrajectoryCalculatorHelper {
-
-	public static TrajectoryCalculator getCalculator(ItemStack itemStack, PlayerObject playerObject) {
-		CalculatorType calculatorType = CalculatorType.getByItemStack(itemStack);
-		return getCalculator(calculatorType, playerObject);
-	}
+public class TrajectoryCalculatorFactory {
 	
 	public static TrajectoryCalculator getCalculator(CalculatorType calculatorType, PlayerObject playerObject) {
 		TrajectoryCalculator calculator = null;

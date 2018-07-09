@@ -250,13 +250,4 @@ public abstract class MenuSheet {
 	public JavaPlugin getPlugin() {
 		return plugin;
 	}
-
-//	public MenuSheet getMenu(String name) {
-//		if(menus.containsKey(name))
-//			return menus.get(name);
-//		else if(parent != null && parent.menus.containsKey(name)) {
-//			return parent.menus.get(name);
-//		}
-//		return null;
-//	}
 }

@@ -8,19 +8,17 @@ import java.util.UUID;
 
 import org.bukkit.Particle;
 
-import de.janst.trajectory.TrajectorySimulator;
 import de.janst.trajectory.calculator.CalculatorType;
 import de.janst.trajectory.util.RGBColor;
 
-public class PlayerConfiguration extends Config {
+public class PlayerConfiguration extends ConfigWithDefaults {
 
 	private final Map<CalculatorType, Particle> particles = new HashMap<CalculatorType, Particle>();
 	private final Map<CalculatorType, Color> particleColors = new HashMap<CalculatorType, Color>();
 	
 	public PlayerConfiguration(UUID uuid) throws IOException {
-		super("/players/" + uuid.toString() + ".yml");
+		super("/players/" + uuid.toString() + ".yml", new PlayerConfigurationDefaults("DefaultPlayerConfig.yml"));
 		
-		config.addDefaults(TrajectorySimulator.getInstance().getPlayerConfigurationDefaults().getDefaults());
 		save(false);
 	}
 	
