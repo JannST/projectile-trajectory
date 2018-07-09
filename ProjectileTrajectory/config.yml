@@ -9,11 +9,11 @@ save-instant: false
 
 #When instant saving is disabled a scheduler is used to save the data in certain intervals
 #With this option you can set the interval time in minutes
-save-interval: 1
+save-interval: 5
 
 #set the maximal length a trajectory can have
 maximal-length: 400
 
-#allow or disallow player to change particles. 
-#if particle change is disabled and you want to allow it to certain persons nevertheless you have to give the permission projectiletrajectory.change
+#allow or disallow players to change particles. 
+#if particle change is disabled and you want to allow it to certain players you have to give the permission projectiletrajectory.change
 allow-particle-change: true
